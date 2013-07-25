@@ -46,7 +46,7 @@ var __slice = [].slice;
         _this = this;
 
       if (this instanceof Backbone.Model) {
-        event_name = 'change';
+        event_name = 'sync';
         if (!this.isNew()) return callback(this);
       }; 
       if (this instanceof Backbone.Collection) {
