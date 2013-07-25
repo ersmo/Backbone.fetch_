@@ -4,7 +4,8 @@ var __slice = [].slice;
   var json;
   json = {
     fetch_auto: function(json) {
-      var d, i, k, next_to_fetch, now_to_fetch, v, _i, _j, _len, _len1;
+      var d, i, k, next_to_fetch, now_to_fetch, targets, v, _i, _len, _ref,
+        _this = this;
       if (_.isEmpty(json)) return this.fetch();
       for (k in json) {
         v = json[k];
@@ -19,21 +20,27 @@ var __slice = [].slice;
         }
         return _results;
       })();
-      for (_i = 0, _len = now_to_fetch.length; _i < _len; _i++) {
-        d = now_to_fetch[_i];
-        json[d][0].fetch();
-      }
       next_to_fetch = _.omit(json, now_to_fetch);
       for (k in next_to_fetch) {
         v = next_to_fetch[k];
-        for (_j = 0, _len1 = now_to_fetch.length; _j < _len1; _j++) {
-          d = now_to_fetch[_j];
+        for (_i = 0, _len = now_to_fetch.length; _i < _len; _i++) {
+          d = now_to_fetch[_i];
           if ((i = v.indexOf(d)) > -1) v.splice(i, 1);
         }
       }
-
-      return this.fetch_auto(next_to_fetch);
-    },    
+      targets = (function() {
+        var _j, _len1, _results;
+        _results = [];
+        for (_j = 0, _len1 = now_to_fetch.length; _j < _len1; _j++) {
+          d = now_to_fetch[_j];
+          _results.push(json[d][0]);
+        }
+        return _results;
+      })();
+      return (_ref = targets[0]).fetch_with.apply(_ref, __slice.call(targets.slice(1)).concat([function() {
+        return _this.fetch_auto(next_to_fetch);
+      }]));
+    },
     fetch_sync: function(callback) {
       var fn, event_name,
         _this = this;
